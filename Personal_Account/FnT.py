@@ -22,3 +22,28 @@ def z_score(data, win):
 
 def forwardPE(ticker):
     tick=yf.Ticker(ticker)
+
+def donchian(data,n_days):
+    hh=[]
+    ll=[] 
+    for i in range(0, len(data['Close'])-n_days+1):
+        for j in range(i, i+n_days):
+            hh.append(max(data['High']))
+            ll.append(min(data['Low']))
+    df=pd.DataFrame({"Highest Highs":hh, "Lowest Lows":ll})
+    return df
+
+# RSP/SPY-> Higher means more broad
+def breadth(start_date):
+    spy=yf.download('SPY', start=start_date)
+    rsp=yf.download('RSP', start=start_date)
+    df=pd.DataFrame({
+        'Breadth':rsp['Close']['RSP']/spy['Close']['SPY']
+    })
+    return df
+
+def plot_breadth(start_date):
+    ratio=breadth(start_date)
+    ratio.plot()
+    plt.show()
+
